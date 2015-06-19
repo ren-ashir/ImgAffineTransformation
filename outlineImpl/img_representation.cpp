@@ -6,7 +6,7 @@
 */
 
 #include "img_representation.h"
-namespace img_repr
+namespace imgznd
 {
 // public methods
 OpenCvImgRepr::OpenCvImgRepr(const std::string &path) // : cv::Mat {cv::imread(path, 0)}

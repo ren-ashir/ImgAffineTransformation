@@ -7,7 +7,7 @@
 
 #include "img_provider.h"
 
-namespace img_provider
+namespace imgznd
 {
 //interface
 std::string getImgLink(const std::unique_ptr<Abs_ImageUri>  &img_link)

@@ -17,12 +17,14 @@ TEMPLATE = app
 
 SOURCES += main.cpp \
     img_provider.cpp \
-    img_representation.cpp
+    img_representation.cpp \
+    img_algorithm.cpp
 
 HEADERS += \
     img_provider.h \
     make_unique.h \
-    img_representation.h
+    img_representation.h \
+    img_algorithm.h
 
 LIBS += -lopencv_core
 LIBS += -lopencv_imgproc

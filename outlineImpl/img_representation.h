@@ -13,7 +13,7 @@
 #include <opencv2/highgui/highgui.hpp>
 #include <opencv2/gpu/gpu.hpp>
 
-namespace img_repr
+namespace imgznd
 {
 // interface for a different implementation of the img data
 class AbsImgRepr
@@ -29,6 +29,7 @@ class OpenCvImgRepr : public AbsImgRepr, public cv::Mat
 public:
     using cv::Mat::Mat;
     OpenCvImgRepr (const std::string &path);
+    OpenCvImgRepr () {}
     void readImage (const std::string &path) override;
     void saveToFile(const std::string &path) override;
 };

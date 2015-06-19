@@ -13,7 +13,7 @@
 #include "make_unique.h"
 #define IMG_PATH ImgPaths::instance()
 
-namespace img_provider
+namespace imgznd
 {
 
 class Abs_ImageUri;
@@ -24,7 +24,7 @@ std::string getTifLink();
 std::string getJpgLink();
 
 class ImgPaths
-{ // singleton for a paths
+{ // singleton for paths
 public:
     static const ImgPaths &instance ();
     std::string pathToImgFolder() const;
