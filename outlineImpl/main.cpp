@@ -1,3 +1,10 @@
+/*
+ * img_representation.h
+ * This source code is completely free.
+ * Copyright (C) 2015, Renat Ashirbakiev
+ * r.robotman@yandex.ru - Russia->Moscow
+*/
+
 #include <QCoreApplication>
 #include "img_provider.h"
 #include "img_representation.h"
@@ -10,12 +17,12 @@ int main(int argc, char *argv[])
 {
     try{
         OpenCvImgRepr img(getJpgLink()),imgOut;
-//        openCvResizeBorder(img,100,100);
-//        openCvRotate(img,imgOut,30,1);
-//        imgOut.saveToFile("rotate-3.png");
+        openCvResizeBorder(img,100,100);
+        openCvRotate(img,imgOut,30,1);
+        imgOut.saveToFile("rotated.png");
 
-        openCvZoom (img,9.0);
-        img.saveToFile("filek.png");
+        //        openCvZoom (img,9.0);
+        //        img.saveToFile("zoomed.png");
     }
     catch(std::out_of_range &orn)
     {

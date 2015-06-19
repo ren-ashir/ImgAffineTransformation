@@ -1,16 +1,23 @@
+/*
+ * img_representation.h
+ * This source code is completely free.
+ * Copyright (C) 2015, Renat Ashirbakiev
+ * r.robotman@yandex.ru - Russia->Moscow
+*/
+
 #include "img_algorithm.h"
 
 namespace imgznd
 {
 void openCvRotate(const imgznd::OpenCvImgRepr &src, imgznd::OpenCvImgRepr &warp_rotate_dst, double angle, double scale)
 {
-    double width = src.cols;
-    double height = src.rows;
+    int width = src.cols;
+    int height = src.rows;
     cv::Size imgSize = src.size();
     imgSize.width = width;
     imgSize.height = height;
     /// Compute a rotation matrix with respect to the center of the image
-    cv::Point center = cv::Point{ width/2.0, height/2.0 };
+    cv::Point center = cv::Point{ width/2, height/2 };
     cv::Mat rot_mat{ 2, 3, CV_32FC1 };
     //rot_mat.
     rot_mat = cv::getRotationMatrix2D(center, angle, scale );

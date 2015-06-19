@@ -25,13 +25,47 @@ void OpenCvImgRepr::saveToFile(const std::string &path)
 {
     cv::imwrite(path, *this);
 }
+
+const OpenCvImgRepr::CvArray1D OpenCvImgRepr::operator [](int index) const
+{
+    if (index >= cv::Mat::rows)
+        throw std::out_of_range {"cv first index error"};
+    return CvArray1D(cv::Mat::ptr<returnType>(index),cv::Mat::cols);
+}
+
+OpenCvImgRepr::CvArray1D OpenCvImgRepr::operator [](int index)
+{ // get rid of the CvArray1D& in order to use the rvalue of a temprary object
+    if (index >= cv::Mat::rows)
+        throw std::out_of_range {"cv first index error"};
+    return  CvArray1D(cv::Mat::ptr<returnType>(index),cv::Mat::cols);
+}
+
+OpenCvImgRepr::CvArray1D::CvArray1D(OpenCvImgRepr::returnType *ptr, int n) : arrayPtr{ptr},sizen{n} {}
+
+OpenCvImgRepr::CvArray1D::CvArray1D(const OpenCvImgRepr::returnType *ptr, int n) : arrayPtr{const_cast<returnType*>(ptr)},sizen{n}{}
+
+const OpenCvImgRepr::returnType OpenCvImgRepr::CvArray1D::operator [](int index) const {
+    if (index >= sizen)
+        throw std::out_of_range {"cv second index error"};
+    return arrayPtr[index];
+}
+
+OpenCvImgRepr::returnType &OpenCvImgRepr::CvArray1D::operator [](int index) {
+    if (index >= sizen)
+        throw std::out_of_range {"cv second index error"};
+    return arrayPtr[index];
+}
+
+
 void QtImgRepr::readImage(const std::string &path)
 {
 
 }
+
 void QtImgRepr::saveToFile(const std::string &path)
 {
 
 }
+
 
 }
