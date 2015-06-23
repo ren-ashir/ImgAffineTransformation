@@ -51,4 +51,5 @@ void openCvZoom(OpenCvImgRepr &src, double scale)
     cv::resize(src,src,sz,cv::INTER_LANCZOS4);
 }
 
+
 }

@@ -16,10 +16,30 @@ using namespace imgznd;
 int main(int argc, char *argv[])
 {
     try{
-        OpenCvImgRepr img(getJpgLink()),imgOut;
-        openCvResizeBorder(img,100,100);
-        openCvRotate(img,imgOut,30,1);
-        imgOut.saveToFile("rotated.png");
+        int sz = 10000;
+        float *px = new float[sz]; //{1,2,3,4,5,6};
+        float *py = new float[sz]; //{1,2,3,4,4,6};
+        std::for_each (px,px + sz,[](float &p) { static int i = 1; p = i; i++; });
+        std::for_each (py,py + sz,[=](float &p) { static int i = sz; p = i; i--; });
+        //std::copy(py,py + sz,ostream_iterator<float>(cout," "));
+        // return 0;
+        auto t0 = chrono::high_resolution_clock::now();
+        imgznd::rotatePoint1thread(px,py,2.0,sz);
+        auto t1 = chrono::high_resolution_clock::now();
+        //cout << res << '\n';
+        cout << chrono::duration_cast<chrono::milliseconds>(t1-t0).count() << " msec\n";
+
+        t0 = chrono::high_resolution_clock::now();
+        imgznd::rotatePointMultithread(px,py,2.0,sz);
+        t1 = chrono::high_resolution_clock::now();
+        //cout << res << '\n';
+        cout << chrono::duration_cast<chrono::milliseconds>(t1-t0).count() << " msec\n";
+
+        // std::copy(px,px + sz,ostream_iterator<float>(cout," "));
+        //        OpenCvImgRepr img(getJpgLink()),imgOut;
+        //        openCvResizeBorder(img,100,100);
+        //        openCvRotate(img,imgOut,30,1);
+        //        imgOut.saveToFile("rotated.png");
 
         //        openCvZoom (img,9.0);
         //        img.saveToFile("zoomed.png");
