@@ -1,10 +1,9 @@
 /*
- * img_provider.h
+ * img_provider.cpp
  * This source code is completely free.
- * Copyright (C) 2015, Renat Ashirbakiev
+ * 2015, Renat Ashirbakiev
  * r.robotman@yandex.ru - Russia->Moscow
 */
-
 #ifndef IMG_PROVIDER_H
 #define IMG_PROVIDER_H
 

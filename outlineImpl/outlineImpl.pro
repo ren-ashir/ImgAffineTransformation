@@ -5,8 +5,8 @@
 #-------------------------------------------------
 
 QT       += core
+QT += gui
 
-QT       -= gui
 
 TARGET = outlineImpl
 CONFIG   += console
@@ -18,13 +18,15 @@ TEMPLATE = app
 SOURCES += main.cpp \
     img_provider.cpp \
     img_representation.cpp \
-    img_algorithm.cpp
+    img_algorithm.cpp \
+    img_reader.cpp
 
 HEADERS += \
     img_provider.h \
     make_unique.h \
     img_representation.h \
-    img_algorithm.h
+    img_algorithm.h \
+    img_reader.h
 
 LIBS += -lopencv_core
 LIBS += -lopencv_imgproc
@@ -38,3 +40,4 @@ LIBS += -lopencv_contrib
 LIBS += -lopencv_legacy
 LIBS += -lopencv_flann
 LIBS += -lopencv_gpu
+LIBS += -ltiff

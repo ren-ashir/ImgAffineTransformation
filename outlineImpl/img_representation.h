@@ -1,7 +1,7 @@
 /*
- * img_representation.h
+ * img_provider.cpp
  * This source code is completely free.
- * Copyright (C) 2015, Renat Ashirbakiev
+ * 2015, Renat Ashirbakiev
  * r.robotman@yandex.ru - Russia->Moscow
 */
 
