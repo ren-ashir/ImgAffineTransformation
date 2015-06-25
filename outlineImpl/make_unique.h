@@ -1,3 +1,10 @@
+/*
+ * img_provider.cpp
+ * This source code is completely free.
+ * 2015, Renat Ashirbakiev
+ * r.robotman@yandex.ru - Russia->Moscow
+ * https://github.com/ren-ashir/ImgAffineTransformation/
+*/
 
 #ifndef MAKE_UNIQUE_H
 #define MAKE_UNIQUE_H

@@ -3,10 +3,16 @@
  * This source code is completely free.
  * 2015, Renat Ashirbakiev
  * r.robotman@yandex.ru - Russia->Moscow
+ * https://github.com/ren-ashir/ImgAffineTransformation/
 */
 #ifndef IMG_ALGORITHM_H
 #define IMG_ALGORITHM_H
 
+#include <QImage>
+#include <QPixmap>
+#include <QDebug>
+#include "opencv2/imgproc/imgproc.hpp"
+#include "opencv2/imgproc/types_c.h"
 #include <iterator>
 #include <functional>
 #include <chrono>
@@ -62,6 +68,15 @@ void rotatePointMultithread(T *x, T *y, double angle, int n)
     rotatePoint1thread (x,y,angle,n);
     std::for_each(threads.begin(),threads.end(),mem_fn(&std::thread::join)); // дождаться завершения всех потоков
 }
+
+/*
+   Functions to convert between OpenCV's cv::Mat and Qt's QImage and QPixmap.
+   Andy Maloney
+   23 November 2013
+   http://asmaloney.com/2013/11/code/converting-between-cvmat-and-qimage-or-qpixmap
+ */
+ QImage  cvMatToQImage( const cv::Mat &inMat );
+ QPixmap cvMatToQPixmap( const cv::Mat &inMat );
 }
 
 #endif // IMG_ALGORITHM_H

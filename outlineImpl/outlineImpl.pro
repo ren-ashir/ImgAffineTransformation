@@ -6,7 +6,7 @@
 
 QT       += core
 QT += gui
-
+QT += widgets
 
 TARGET = outlineImpl
 CONFIG   += console

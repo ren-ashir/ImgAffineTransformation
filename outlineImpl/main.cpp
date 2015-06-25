@@ -3,6 +3,7 @@
  * This source code is completely free.
  * 2015, Renat Ashirbakiev
  * r.robotman@yandex.ru - Russia->Moscow
+ * https://github.com/ren-ashir/ImgAffineTransformation/
 */
 
 #include <QCoreApplication>
@@ -13,12 +14,18 @@
 #include <iostream>
 #include "tiff.h"
 #include "tiffio.h"
+#include <QApplication>
+#include <QGraphicsScene>
+#include <QGraphicsView>
+#include <QGraphicsPixmapItem>
+
 
 
 using namespace std;
 using namespace imgznd;
 int main(int argc, char *argv[])
 {
+
     try{
         //        int sz = 10000000000;
         //        float *px = new float[sz]; //{1,2,3,4,5,6};
@@ -40,16 +47,25 @@ int main(int argc, char *argv[])
         //        cout << chrono::duration_cast<chrono::milliseconds>(t1-t0).count() << " msec\n";
 
         // std::copy(px,px + sz,ostream_iterator<float>(cout," "));
-        //        OpenCvImgRepr img(getJpgLink()),imgOut;
-        //        openCvResizeBorder(img,100,100);
-        //        openCvRotate(img,imgOut,30,1);
-        //        imgOut.saveToFile("rotated.png");
+        OpenCvImgRepr img(getJpgLink());//,imgOut;
+        QApplication a(argc, argv);
+        QGraphicsScene scene;
+        QGraphicsView view(&scene);
+        QGraphicsPixmapItem item(QPixmap(cvMatToQPixmap(img)));
+        scene.addItem(&item);
+        view.show();
+        return a.exec();
 
-        //        openCvZoom (img,9.0);
-        //        img.saveToFile("zoomed.png");
 
-        ImgReader iread(getJpgLink());
-        iread.testfSaveImage("new.jpg");
+        //                openCvResizeBorder(img,100,100);
+        //                openCvRotate(img,imgOut,30,1);
+        //                imgOut.saveToFile("rotated.png");
+
+        //                openCvZoom (img,9.0);
+        //                img.saveToFile("zoomed.png");
+
+        //        ImgReader iread(getJpgLink());
+        //        iread.testfSaveImage("new.jpg");
     }
     catch(std::out_of_range &orn)
     {

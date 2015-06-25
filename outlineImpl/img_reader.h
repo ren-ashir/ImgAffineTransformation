@@ -3,6 +3,7 @@
  * This source code is completely free.
  * 2015, Renat Ashirbakiev
  * r.robotman@yandex.ru - Russia->Moscow
+ * https://github.com/ren-ashir/ImgAffineTransformation/
 */
 
 #ifndef IMG_READER_H
