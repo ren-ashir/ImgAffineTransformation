@@ -57,7 +57,6 @@ OpenCvImgRepr::returnType &OpenCvImgRepr::CvArray1D::operator [](int index) {
     return arrayPtr[index];
 }
 
-
 void QtImgRepr::readImage(const std::string &path)
 {
 

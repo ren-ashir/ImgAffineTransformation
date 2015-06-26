@@ -6,21 +6,15 @@
  * https://github.com/ren-ashir/ImgAffineTransformation/
 */
 
+
 #include <QCoreApplication>
-#include "img_provider.h"
-#include "img_representation.h"
-#include "img_algorithm.h"
-#include "img_reader.h"
 #include <iostream>
-#include "tiff.h"
-#include "tiffio.h"
 #include <QApplication>
 #include <QGraphicsScene>
 #include <QGraphicsView>
 #include <QGraphicsPixmapItem>
-
-
-
+#include "img_includs.h"
+#include "imgtestgui.h"
 using namespace std;
 using namespace imgznd;
 int main(int argc, char *argv[])
@@ -47,13 +41,17 @@ int main(int argc, char *argv[])
         //        cout << chrono::duration_cast<chrono::milliseconds>(t1-t0).count() << " msec\n";
 
         // std::copy(px,px + sz,ostream_iterator<float>(cout," "));
-        OpenCvImgRepr img(getJpgLink());//,imgOut;
+        //        OpenCvImgRepr img(getJpgLink());//,imgOut;
+        //        openCvResizeBorder(img,200,200);
+        //        openCvRotate (img,img,30,1);
         QApplication a(argc, argv);
-        QGraphicsScene scene;
-        QGraphicsView view(&scene);
-        QGraphicsPixmapItem item(QPixmap(cvMatToQPixmap(img)));
-        scene.addItem(&item);
-        view.show();
+        ImgTestGui gui;
+        // QGraphicsView view(&scene);
+        //QGraphicsScene scene;
+        //QGraphicsPixmapItem item(QPixmap(cvMatToQPixmap(img)));
+        //scene.addItem(&item);
+        //view.show();
+        gui.show();
         return a.exec();
 
 
