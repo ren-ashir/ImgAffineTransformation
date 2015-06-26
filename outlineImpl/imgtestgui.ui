@@ -46,7 +46,7 @@
         <item row="0" column="0">
          <widget class="QPushButton" name="pushButton">
           <property name="text">
-           <string>Image load</string>
+           <string>View image</string>
           </property>
          </widget>
         </item>

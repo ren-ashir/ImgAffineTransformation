@@ -53,8 +53,6 @@ int main(int argc, char *argv[])
         //view.show();
         gui.show();
         return a.exec();
-
-
         //                openCvResizeBorder(img,100,100);
         //                openCvRotate(img,imgOut,30,1);
         //                imgOut.saveToFile("rotated.png");
