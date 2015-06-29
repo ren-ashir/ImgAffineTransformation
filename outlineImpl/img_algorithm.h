@@ -33,44 +33,10 @@ float* algoCudaGetRow(int row);
 void algoCudaRotate();
 
 //cpu, multithreading
-template<typename T>
-void algoRotatePoint1thread(T *x, T *y, double angle, int n)
-{
-    static T sinteta = std::sin (angle);
-    static T costeta = std::cos (angle);
-    T xn,yn;
-    for (int i = 0; i < n; ++i)
-    {
-        xn = x[i] * costeta + y[i] * sinteta;
-        yn = -x[i] * sinteta + y[i] * costeta;
-        x[i] = xn;
-        y[i] = yn;
-    }
-}
-template<typename T>
-void algoRotatePointMultithread(T *x, T *y, double angle, int n)
-{
-    using cuint = unsigned int const;
-    cuint min_per_thread = 100,
-            max_threads = (n + min_per_thread - 1) / min_per_thread, // получить максимальное число потоков
-            hardware_threads = std::thread::hardware_concurrency(),
-            num_threads = std::min (hardware_threads == 0 ? 2 : hardware_threads,max_threads), // не запускать потоков больше, чем есть на машине
-            block_size = n / num_threads;
-    std::vector<std::thread> threads(num_threads - 1);
-    //std::cout << "block size: " << block_size << '\n';
-    //std::cout << "num thread: " << num_threads << '\n';
-    for (auto &cur_thread: threads){
-        cur_thread = std::thread(algoRotatePoint1thread<T>,x,y,angle,int(block_size));
-        std::advance(x,block_size);
-        std::advance(y,block_size);
-        n -= block_size;
-    }
-    algoRotatePoint1thread (x,y,angle,n);
-    std::for_each(threads.begin(),threads.end(),mem_fn(&std::thread::join)); // дождаться завершения всех потоков
-}
-
 QPixmap algoOneThreadCpuRotateQPixmap(const OpenCvImgRepr &img,double angle = -90);
 QPixmap algoMultiThreadRorateQpixmap(const OpenCvImgRepr &img,double angle = -90);
+
+
 /*
    Functions to convert between OpenCV's cv::Mat and Qt's QImage and QPixmap.
    Andy Maloney
@@ -79,6 +45,46 @@ QPixmap algoMultiThreadRorateQpixmap(const OpenCvImgRepr &img,double angle = -90
  */
  QImage  algoCvMatToQImage( const cv::Mat &inMat );
  QPixmap algoCvMatToQPixmap( const cv::Mat &inMat );
+
+ //math algo
+ double algoDeg2Rad(double deg);
 }
 
 #endif // IMG_ALGORITHM_H
+//backstage code
+
+//template<typename T>
+//void algoRotatePoint1thread(T *x, T *y, double angle, int n)
+//{
+//    static T sinteta = std::sin (angle);
+//    static T costeta = std::cos (angle);
+//    T xn,yn;
+//    for (int i = 0; i < n; ++i)
+//    {
+//        xn = x[i] * costeta + y[i] * sinteta;
+//        yn = -x[i] * sinteta + y[i] * costeta;
+//        x[i] = xn;
+//        y[i] = yn;
+//    }
+//}
+//template<typename T>
+//void algoRotatePointMultithread(T *x, T *y, double angle, int n)
+//{
+//    using cuint = unsigned int const;
+//    cuint min_per_thread = 100,
+//            max_threads = (n + min_per_thread - 1) / min_per_thread, // получить максимальное число потоков
+//            hardware_threads = std::thread::hardware_concurrency(),
+//            num_threads = std::min (hardware_threads == 0 ? 2 : hardware_threads,max_threads), // не запускать потоков больше, чем есть на машине
+//            block_size = n / num_threads;
+//    std::vector<std::thread> threads(num_threads - 1);
+//    //std::cout << "block size: " << block_size << '\n';
+//    //std::cout << "num thread: " << num_threads << '\n';
+//    for (auto &cur_thread: threads){
+//        cur_thread = std::thread(algoRotatePoint1thread<T>,x,y,angle,int(block_size));
+//        std::advance(x,block_size);
+//        std::advance(y,block_size);
+//        n -= block_size;
+//    }
+//    algoRotatePoint1thread (x,y,angle,n);
+//    std::for_each(threads.begin(),threads.end(),mem_fn(&std::thread::join)); // дождаться завершения всех потоков
+//}
