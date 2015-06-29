@@ -38,9 +38,9 @@ QPixmap imgznd::DataModel::getStrightforwardQPixmap()
 }
 
 QPixmap imgznd::DataModel::getOpenCvRotatedQPixmap()
-{
+{ //  imgznd::algoOpenCvZoom(img,2);
     img.readImage(path);
-    double angle = 30.0;
+    double angle = -38.0;
     TIMEF(imgznd::algoOpenCvRotate(img,img,angle,1));
     return imgznd::algoCvMatToQPixmap(img);
 }
@@ -56,7 +56,7 @@ QPixmap imgznd::DataModel::getOneThreadCpuRotatedQPixmap()
 QPixmap imgznd::DataModel::getMultithreadRoratedQpixmap()
 { // todo: add a time RAII class
     img.readImage(path);
-    double angle = 87.0;
+    double angle = 35.0;
     raiiTimeMeasure tm(lastoptime);
     return imgznd::algoMultiThreadRorateQpixmap(img,angle);
 }
@@ -64,4 +64,9 @@ QPixmap imgznd::DataModel::getMultithreadRoratedQpixmap()
 double imgznd::DataModel::lastOperationTime()
 {
     return lastoptime;
+}
+
+void imgznd::DataModel::saveButtonPushed()
+{
+    img.saveToFile("output.jpg");
 }

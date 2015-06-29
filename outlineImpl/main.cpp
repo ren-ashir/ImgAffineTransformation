@@ -15,6 +15,7 @@
 #include <QGraphicsPixmapItem>
 #include "img_includs.h"
 #include "imgtestgui.h"
+
 using namespace std;
 using namespace imgznd;
 

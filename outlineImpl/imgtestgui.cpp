@@ -36,8 +36,6 @@ void ImgTestGui::on_pushButton_2_clicked()
 
 void ImgTestGui::on_pushButton_3_clicked()
 { // CUDA rotator
-
-
 }
 
 void ImgTestGui::on_pushButton_4_clicked()
@@ -53,7 +51,7 @@ void ImgTestGui::on_pushButton_5_clicked()
 
 //private
 void ImgTestGui::setNewPixmapToScene(const QPixmap& pix)
-{
+{        
     qgpitem = make_unique<QGraphicsPixmapItem>(pix);
     scene = make_unique<QGraphicsScene>();
     scene->addItem(qgpitem.get());
@@ -66,6 +64,10 @@ void ImgTestGui::setTimeAndUserStringToLogLine(const QString &s)
     ui->lineEdit_4->setText(QString::number(model.lastOperationTime()) + s);
 }
 
-
-
-
+void ImgTestGui::on_pushButton_6_clicked()
+{
+   // model.saveButtonPushed();
+//   QGraphicsPixmapItem TMP;
+//   TMP.pixmap().toImage().save("output.jpg")
+    qgpitem->pixmap().toImage().save("output.jpg");
+}

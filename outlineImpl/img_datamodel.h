@@ -53,6 +53,7 @@ public:
     QPixmap getOneThreadCpuRotatedQPixmap();
     QPixmap getMultithreadRoratedQpixmap();
     double lastOperationTime();
+    void saveButtonPushed();
 };
 }
 #endif // IMG_DATAMODEL_H

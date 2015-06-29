@@ -82,7 +82,8 @@ QPixmap algoOneThreadCpuRotateQPixmap(const OpenCvImgRepr &img, double angle)
     angle = algoDeg2Rad(angle);
     double sinteta = std::sin (angle);
     double costeta = std::cos (angle);
-    imgznd::OpenCvImgRepr newImgone(img.size(),img.type());
+    imgznd::OpenCvImgRepr newImgone{img.size(),img.type()};
+     newImgone.setTo(0);
     try{
         blockSubmatrixOp (newImgone,img,0,img.rows,sinteta,costeta);
     }
@@ -100,6 +101,10 @@ QPixmap algoMultiThreadRorateQpixmap(const OpenCvImgRepr &img, double angle)
     double sinteta = std::sin (angle);
     double costeta = std::cos (angle);
     imgznd::OpenCvImgRepr newImgone{img.size(),img.type()};
+    newImgone.setTo(0);
+
+   // newImgonecreate(img.rows,img.cols,img.type());
+    //newImgone = cv::Mat::zeros(img.rows, img.cols, img.type());
     try{
         const int minblocksize = 25,
                 nthreads = (newImgone.rows + minblocksize - 1) / minblocksize,
@@ -172,16 +177,17 @@ QImage algoCvMatToQImage(const cv::Mat &inMat)
     return QImage();
 }
 
-QPixmap algoCvMatToQPixmap(const cv::Mat &inMat)
+inline QPixmap algoCvMatToQPixmap(const cv::Mat &inMat)
 {
     return QPixmap::fromImage( algoCvMatToQImage( inMat ) );
 }
 
 //math algo
 constexpr double pi = acos(-1.0);
-double algoDeg2Rad(double deg)
+inline double algoDeg2Rad(double deg)
 {
     return deg / 180.0 * pi;
 }
+
 
 }

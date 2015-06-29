@@ -16,8 +16,10 @@ OpenCvImgRepr::OpenCvImgRepr(const std::string &path) // : cv::Mat {cv::imread(p
 }
 void OpenCvImgRepr::readImage(const std::string &path)
 {
-    if (!this->empty())
+    if (!this->empty()){
+        qDebug () << "released";
         this->release();
+    }
     cv::Mat::operator =(cv::imread(path));// static_cast<cv::Mat&>(*this) = cv::imread(path);
     if (!this->data)
         throw std::bad_alloc{};

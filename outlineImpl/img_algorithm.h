@@ -19,6 +19,7 @@
 #include <thread>
 #include <vector>
 #include <algorithm>
+#include <cuda_runtime.h>
 #include "img_representation.h"
 
 namespace imgznd
@@ -26,9 +27,10 @@ namespace imgznd
 //OpenCV lib
 void algoOpenCvRotate (const OpenCvImgRepr &src,OpenCvImgRepr &warp_rotate_dst,double angle = -90,double scale = 1.0);
 void algoOpenCvResizeBorder(OpenCvImgRepr &src,double dx,double dy);
-void algopenCvZoom(OpenCvImgRepr &src,double scale = 1.0);
+void algoOpenCvZoom(OpenCvImgRepr &src,double scale = 1.0);
 
 //cuda's function
+extern "C" cudaError_t cuda_main();
 float* algoCudaGetRow(int row);
 void algoCudaRotate();
 
