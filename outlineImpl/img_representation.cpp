@@ -45,7 +45,7 @@ OpenCvImgRepr::CvArray1D::CvArray1D(OpenCvImgRepr::returnType *ptr, int n) : arr
 
 OpenCvImgRepr::CvArray1D::CvArray1D(const OpenCvImgRepr::returnType *ptr, int n) : arrayPtr{const_cast<returnType*>(ptr)},sizen{n}{}
 
-const OpenCvImgRepr::returnType OpenCvImgRepr::CvArray1D::operator [](int index) const {
+OpenCvImgRepr::returnType OpenCvImgRepr::CvArray1D::operator [](int index) const {
     if (index >= sizen)
         throw std::out_of_range {"cv second index error"};
     return arrayPtr[index];

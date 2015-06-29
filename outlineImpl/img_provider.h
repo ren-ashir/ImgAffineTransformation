@@ -32,7 +32,7 @@ public:
 private:
     ImgPaths (){}
     ImgPaths (const ImgPaths&){}
-    ImgPaths& operator= (const ImgPaths&) {}
+    ImgPaths& operator= (const ImgPaths&) { return *this; }
     ~ImgPaths () {}
 };
 

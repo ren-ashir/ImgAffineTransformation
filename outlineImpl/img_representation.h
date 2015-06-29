@@ -40,7 +40,7 @@ public:
         CvArray1D(returnType* ptr,int n);
         CvArray1D(const returnType* ptr,int n);
         returnType& operator [] (int index);
-        const returnType operator [] (int index) const;
+        returnType operator [] (int index) const;
     private:
         returnType *arrayPtr;
         int sizen;

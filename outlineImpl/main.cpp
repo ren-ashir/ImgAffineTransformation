@@ -21,8 +21,9 @@ using namespace imgznd;
 #include <QApplication>
 class Application final : public QApplication {
 public:
-    Application(int& argc, char** argv) : QApplication(argc, argv) {}
-    virtual bool notify(QObject *receiver, QEvent *e) override {
+    Application(int& argc, char** argv) : QApplication{argc, argv} {}
+    virtual bool notify(QObject *receiver, QEvent *e) override
+    {
         try {
             return QApplication::notify(receiver, e);
             // Handle the desired exception type
@@ -44,6 +45,7 @@ public:
             std::cerr << "Unknown exception [SANDBOX]\n";
             throw; // try to continue
         }
+        return true;
     }
 };
 
@@ -54,7 +56,6 @@ int main(int argc, char *argv[])
     ImgTestGui gui;
     gui.show();
     return a.exec();
-    return 0;
 }
 /* backstage code
         //        int sz = 10000000000;

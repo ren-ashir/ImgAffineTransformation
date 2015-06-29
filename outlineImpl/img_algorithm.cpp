@@ -44,13 +44,6 @@ void algoOpenCvResizeBorder(imgznd::OpenCvImgRepr &src,double dx,double dy)
     cv::warpAffine( src, src, warp_mat, imgSize );
 }
 
-/*
-   Functions to convert between OpenCV's cv::Mat and Qt's QImage and QPixmap.
-
-   Andy Maloney
-   23 November 2013
-   http://asmaloney.com/2013/11/code/converting-between-cvmat-and-qimage-or-qpixmap
- */
 void algoOpenCvZoom(OpenCvImgRepr &src, double scale)
 {
     cv::Size sz = src.size();
@@ -58,54 +51,9 @@ void algoOpenCvZoom(OpenCvImgRepr &src, double scale)
     sz.width *= scale;
     cv::resize(src,src,sz,cv::INTER_LANCZOS4);
 }
-
-QImage algoCvMatToQImage(const cv::Mat &inMat)
-{
-    switch ( inMat.type() )
-    {
-    // 8-bit, 4 channel
-    case CV_8UC4:
-    {
-        qDebug () << "8-bit, 4 channel";
-        QImage image( inMat.data, inMat.cols, inMat.rows, inMat.step, QImage::Format_RGB32 );
-        return image;
-    }
-    // 8-bit, 3 channel
-    case CV_8UC3:
-    {
-        qDebug () << "8-bit, 3 channel";
-        QImage image( inMat.data, inMat.cols, inMat.rows, inMat.step, QImage::Format_RGB888 );
-        return image.rgbSwapped();
-    }
-     // 8-bit, 1 channel
-    case CV_8UC1:
-    {
-        static QVector<QRgb>  sColorTable;
-        qDebug () << "8-bit, 1 channel";
-        // only create our color table once
-        if (sColorTable.isEmpty())
-        {
-            for ( int i = 0; i < 256; ++i )
-                sColorTable.push_back( qRgb( i, i, i ) );
-        }
-        QImage image( inMat.data, inMat.cols, inMat.rows, inMat.step, QImage::Format_Indexed8 );
-        image.setColorTable( sColorTable );
-        return image;
-    }
-    default:
-        qDebug() << "ASM::cvMatToQImage() - cv::Mat image type not handled in switch:" << inMat.type();
-        break;
-    }
-
-    return QImage();
-}
-
-QPixmap algoCvMatToQPixmap(const cv::Mat &inMat)
-{
-    return QPixmap::fromImage( algoCvMatToQImage( inMat ) );
-}
-
-inline void blockSubmatrixOp(imgznd::OpenCvImgRepr &matrix_dst,const imgznd::OpenCvImgRepr &matrix_src,int rowStart,int rowEnd,double sinteta,double costeta)
+// cpu, multithreading
+inline void blockSubmatrixOp(imgznd::OpenCvImgRepr &matrix_dst,const imgznd::OpenCvImgRepr &matrix_src,
+                             int rowStart,int rowEnd,double sinteta,double costeta)
 {
     const int ns = matrix_src.rows,
             ms = matrix_src.cols;
@@ -151,14 +99,14 @@ QPixmap algoMultiThreadRorateQpixmap(const OpenCvImgRepr &img, double angle)
     angle = algoDeg2Rad(angle);
     double sinteta = std::sin (angle);
     double costeta = std::cos (angle);
-    imgznd::OpenCvImgRepr newImgone(img.size(),img.type());
+    imgznd::OpenCvImgRepr newImgone{img.size(),img.type()};
     try{
         const int minblocksize = 25,
                 nthreads = (newImgone.rows + minblocksize - 1) / minblocksize,
                 hardwarethreads = std::thread::hardware_concurrency(),
                 realnthreads = std::min (hardwarethreads == 0 ? 2 : hardwarethreads, nthreads),
                 realblocksize = newImgone.rows / realnthreads;
-        std::vector<std::thread> threads (realnthreads - 1);
+        std::vector<std::thread> threads {std::size_t(realnthreads - 1)};
         int start = 0;
         for (int i = 0; i < realnthreads - 1; ++i)
         {
@@ -175,10 +123,62 @@ QPixmap algoMultiThreadRorateQpixmap(const OpenCvImgRepr &img, double angle)
     }
     return imgznd::algoCvMatToQPixmap(newImgone);
 }
+/*
+   Functions to convert between OpenCV's cv::Mat and Qt's QImage and QPixmap.
+
+   Andy Maloney
+   23 November 2013
+   http://asmaloney.com/2013/11/code/converting-between-cvmat-and-qimage-or-qpixmap
+ */
+
+QImage algoCvMatToQImage(const cv::Mat &inMat)
+{
+    switch ( inMat.type() )
+    {
+    // 8-bit, 4 channel
+    case CV_8UC4:
+    {
+        qDebug () << "8-bit, 4 channel";
+        QImage image{inMat.data, inMat.cols, inMat.rows, inMat.step, QImage::Format_RGB32};
+        return image;
+    }
+    // 8-bit, 3 channel
+    case CV_8UC3:
+    {
+        qDebug () << "8-bit, 3 channel";
+        QImage image{inMat.data, inMat.cols, inMat.rows, inMat.step, QImage::Format_RGB888};
+        return image.rgbSwapped();
+    }
+     // 8-bit, 1 channel
+    case CV_8UC1:
+    {
+        static QVector<QRgb>  sColorTable;
+        qDebug () << "8-bit, 1 channel";
+        // only create our color table once
+        if (sColorTable.isEmpty())
+        {
+            for ( int i = 0; i < 256; ++i )
+                sColorTable.push_back( qRgb( i, i, i ) );
+        }
+        QImage image{inMat.data, inMat.cols, inMat.rows, inMat.step, QImage::Format_Indexed8};
+        image.setColorTable( sColorTable );
+        return image;
+    }
+    default:
+        qDebug() << "ASM::cvMatToQImage() - cv::Mat image type not handled in switch:" << inMat.type();
+        break;
+    }
+
+    return QImage();
+}
+
+QPixmap algoCvMatToQPixmap(const cv::Mat &inMat)
+{
+    return QPixmap::fromImage( algoCvMatToQImage( inMat ) );
+}
 
 //math algo
 constexpr double pi = acos(-1.0);
-
 double algoDeg2Rad(double deg)
 {
     return deg / 180.0 * pi;
