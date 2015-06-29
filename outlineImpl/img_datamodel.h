@@ -33,6 +33,7 @@ public:
     QPixmap getStrightforwardQPixmap();
     QPixmap getOpenCvRotatedQPixmap();
     QPixmap getOneThreadCpuRotatedQPixmap();
+    QPixmap getMultithreadRoratedQpixmap();
     double lastOperationTime();
 };
 }

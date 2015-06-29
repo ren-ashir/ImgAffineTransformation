@@ -25,24 +25,30 @@ ImgTestGui::~ImgTestGui()
 void ImgTestGui::on_pushButton_clicked()
 { // For the image view
     setNewPixmapToScene(model.getStrightforwardQPixmap());
-     setTimeAndUserStringToLogLine(" msec for read the image");
+    setTimeAndUserStringToLogLine(" msec for read the image");
 }
 
 void ImgTestGui::on_pushButton_2_clicked()
 { // An OpenCV button
     setNewPixmapToScene(model.getOpenCvRotatedQPixmap());
-    setTimeAndUserStringToLogLine(" msec OpenCV took for rotate");
+    setTimeAndUserStringToLogLine(" msec OpenCV took for the rotate");
 }
 
 void ImgTestGui::on_pushButton_3_clicked()
 { // CUDA rotator
+
 
 }
 
 void ImgTestGui::on_pushButton_4_clicked()
 { // one CPU thread
     setNewPixmapToScene(model.getOneThreadCpuRotatedQPixmap());
-    setTimeAndUserStringToLogLine(" msec for one thread CPU required");
+    setTimeAndUserStringToLogLine(" msec for a one thread CPU required");
+}
+void ImgTestGui::on_pushButton_5_clicked()
+{ // multi CPU thread
+    setNewPixmapToScene (model.getMultithreadRoratedQpixmap());
+    setTimeAndUserStringToLogLine(" msec a multithrad CPU took for the rotate");
 }
 
 //private
@@ -59,6 +65,7 @@ void ImgTestGui::setTimeAndUserStringToLogLine(const QString &s)
 {
     ui->lineEdit_4->setText(QString::number(model.lastOperationTime()) + s);
 }
+
 
 
 
