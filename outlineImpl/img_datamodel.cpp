@@ -109,14 +109,16 @@ QPixmap imgznd::DataModel::getMultithreadRoratedQpixmap()
                 realnthreads = std::min (hardwarethreads == 0 ? 2 : hardwarethreads, nthreads),
                 realblocksize = newImgone.rows / realnthreads;
         std::vector<std::thread> threads (realnthreads - 1);
+        qDebug () << "block size: " << realblocksize;
         int start = 0;
         for (int i = 0; i < realnthreads - 1; ++i)
         {
-            blockSubmatrixOp (newImgone,img,start,start + realblocksize,sinteta,costeta);
+            threads[i] = std::thread(blockSubmatrixOp,std::ref(newImgone),std::ref(img),start,start + realblocksize,sinteta,costeta);
             start += realblocksize;
         }
         blockSubmatrixOp (newImgone,img,start,newImgone.rows,sinteta,costeta);
         for (auto &thrd: threads) thrd.join();
+        //std::for_each(threads.begin(),threads.end(),mem_fn(&std::thread::join));
     }
     catch(...)
     {
@@ -125,7 +127,6 @@ QPixmap imgznd::DataModel::getMultithreadRoratedQpixmap()
     }
     TIMEEND;
     return imgznd::cvMatToQPixmap(newImgone);
-
 }
 
 double imgznd::DataModel::lastOperationTime()

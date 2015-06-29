@@ -35,12 +35,15 @@ public:
         {
             std::cerr << "bad_alloc caught: " << ba.what() << '\n';
         }
+        catch (std::exception &e)
+        {
+            std::cerr << "Exception: " << e.what() << '\n';
+        }
         catch(...)
         {
             std::cerr << "Unknown exception [SANDBOX]\n";
-            throw;
+            throw; // try to continue
         }
-        //
     }
 };
 
