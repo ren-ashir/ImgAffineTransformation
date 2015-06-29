@@ -10,7 +10,7 @@
 
 namespace imgznd
 {
-void openCvRotate(const imgznd::OpenCvImgRepr &src, imgznd::OpenCvImgRepr &warp_rotate_dst, double angle, double scale)
+void algoOpenCvRotate(const imgznd::OpenCvImgRepr &src, imgznd::OpenCvImgRepr &warp_rotate_dst, double angle, double scale)
 {
     int width = src.cols;
     int height = src.rows;
@@ -24,7 +24,7 @@ void openCvRotate(const imgznd::OpenCvImgRepr &src, imgznd::OpenCvImgRepr &warp_
     rot_mat = cv::getRotationMatrix2D(center, angle, scale );
     cv::warpAffine( src, warp_rotate_dst, rot_mat, imgSize ); //,cv::INTER_AREA, cv::BORDER_CONSTANT, cv::Scalar::all(0));
 }
-void openCvResizeBorder(imgznd::OpenCvImgRepr &src,double dx,double dy)
+void algoOpenCvResizeBorder(imgznd::OpenCvImgRepr &src,double dx,double dy)
 {
     cv::Point2f srcTri[3];
     cv::Point2f dstTri[3];
@@ -51,7 +51,7 @@ void openCvResizeBorder(imgznd::OpenCvImgRepr &src,double dx,double dy)
    23 November 2013
    http://asmaloney.com/2013/11/code/converting-between-cvmat-and-qimage-or-qpixmap
  */
-void openCvZoom(OpenCvImgRepr &src, double scale)
+void algoOpenCvZoom(OpenCvImgRepr &src, double scale)
 {
     cv::Size sz = src.size();
     sz.height *= scale;
@@ -59,7 +59,7 @@ void openCvZoom(OpenCvImgRepr &src, double scale)
     cv::resize(src,src,sz,cv::INTER_LANCZOS4);
 }
 
-QImage cvMatToQImage(const cv::Mat &inMat)
+QImage algoCvMatToQImage(const cv::Mat &inMat)
 {
     switch ( inMat.type() )
     {
@@ -108,9 +108,80 @@ QImage cvMatToQImage(const cv::Mat &inMat)
     return QImage();
 }
 
-QPixmap cvMatToQPixmap(const cv::Mat &inMat)
+QPixmap algoCvMatToQPixmap(const cv::Mat &inMat)
 {
-    return QPixmap::fromImage( cvMatToQImage( inMat ) );
+    return QPixmap::fromImage( algoCvMatToQImage( inMat ) );
+}
+
+void blockSubmatrixOp(imgznd::OpenCvImgRepr &matrix_dst,const imgznd::OpenCvImgRepr &matrix_src,int rowStart,int rowEnd,double sinteta,double costeta)
+{
+    const int ns = matrix_src.rows,
+            ms = matrix_src.cols;
+    for (int i = rowStart; i < rowEnd; ++i)
+    {
+        for (int j = 0; j < ms; ++j)
+        {
+            //rotate relative to the middle
+            double x = i - ns / 2.0,
+                    y = j - ms / 2.0;
+            //calc new coords
+            int xn = x * costeta + y * sinteta,
+                    yn = -x * sinteta + y * costeta;
+
+            xn += ns / 2.0;
+            yn += ms / 2.0;
+            if (xn >= 0 && xn < ns && yn >= 0 && yn < ms)
+            {
+                cv::Vec3b bgrPixel = matrix_src.at<cv::Vec3b>(i, j);
+                matrix_dst.at<cv::Vec3b>(xn,yn) = bgrPixel;
+            }
+        }
+    }
+}
+
+QPixmap algoOneThreadCpuRotateQPixmap(const OpenCvImgRepr &img, double angle)
+{
+    double sinteta = std::sin (angle);
+    double costeta = std::cos (angle);
+    imgznd::OpenCvImgRepr newImgone(img.size(),img.type());
+    try{
+        blockSubmatrixOp (newImgone,img,0,img.rows,sinteta,costeta);
+    }
+    catch(...)
+    {
+        qDebug () << "oopps an one thread rotation fail";
+        throw;
+    }
+    return imgznd::algoCvMatToQPixmap(newImgone);
+}
+
+QPixmap algoMultiThreadRorateQpixmap(const OpenCvImgRepr &img, double angle)
+{
+    double sinteta = std::sin (angle);
+    double costeta = std::cos (angle);
+    imgznd::OpenCvImgRepr newImgone(img.size(),img.type());
+    try{
+        const int minblocksize = 25,
+                nthreads = (newImgone.rows + minblocksize - 1) / minblocksize,
+                hardwarethreads = std::thread::hardware_concurrency(),
+                realnthreads = std::min (hardwarethreads == 0 ? 2 : hardwarethreads, nthreads),
+                realblocksize = newImgone.rows / realnthreads;
+        std::vector<std::thread> threads (realnthreads - 1);
+        int start = 0;
+        for (int i = 0; i < realnthreads - 1; ++i)
+        {
+            threads[i] = std::thread(blockSubmatrixOp,std::ref(newImgone),std::ref(img),start,start + realblocksize,sinteta,costeta);
+            start += realblocksize;
+        }
+        blockSubmatrixOp (newImgone,img,start,newImgone.rows,sinteta,costeta);
+        for (auto &thrd: threads) thrd.join();
+    }
+    catch(...)
+    {
+        qDebug () << "oopps multi thread rotation fail";
+        throw;
+    }
+    return imgznd::algoCvMatToQPixmap(newImgone);
 }
 
 

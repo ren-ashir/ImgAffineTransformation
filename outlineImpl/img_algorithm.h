@@ -24,17 +24,17 @@
 namespace imgznd
 {
 //OpenCV lib
-void openCvRotate (const OpenCvImgRepr &src,OpenCvImgRepr &warp_rotate_dst,double angle = -90,double scale = 1.0);
-void openCvResizeBorder(OpenCvImgRepr &src,double dx,double dy);
-void openCvZoom(OpenCvImgRepr &src,double scale = 1.0);
+void algoOpenCvRotate (const OpenCvImgRepr &src,OpenCvImgRepr &warp_rotate_dst,double angle = -90,double scale = 1.0);
+void algoOpenCvResizeBorder(OpenCvImgRepr &src,double dx,double dy);
+void algopenCvZoom(OpenCvImgRepr &src,double scale = 1.0);
 
 //cuda's function
-float* cudaGetRow(int row);
-void cudaRotate();
+float* algoCudaGetRow(int row);
+void algoCudaRotate();
 
 //cpu, multithreading
 template<typename T>
-void rotatePoint1thread(T *x, T *y, double angle, int n)
+void algoRotatePoint1thread(T *x, T *y, double angle, int n)
 {
     static T sinteta = std::sin (angle);
     static T costeta = std::cos (angle);
@@ -48,7 +48,7 @@ void rotatePoint1thread(T *x, T *y, double angle, int n)
     }
 }
 template<typename T>
-void rotatePointMultithread(T *x, T *y, double angle, int n)
+void algoRotatePointMultithread(T *x, T *y, double angle, int n)
 {
     using cuint = unsigned int const;
     cuint min_per_thread = 100,
@@ -60,23 +60,25 @@ void rotatePointMultithread(T *x, T *y, double angle, int n)
     //std::cout << "block size: " << block_size << '\n';
     //std::cout << "num thread: " << num_threads << '\n';
     for (auto &cur_thread: threads){
-        cur_thread = std::thread(rotatePoint1thread<T>,x,y,angle,int(block_size));
+        cur_thread = std::thread(algoRotatePoint1thread<T>,x,y,angle,int(block_size));
         std::advance(x,block_size);
         std::advance(y,block_size);
         n -= block_size;
     }
-    rotatePoint1thread (x,y,angle,n);
+    algoRotatePoint1thread (x,y,angle,n);
     std::for_each(threads.begin(),threads.end(),mem_fn(&std::thread::join)); // дождаться завершения всех потоков
 }
 
+QPixmap algoOneThreadCpuRotateQPixmap(const OpenCvImgRepr &img,double angle = -90);
+QPixmap algoMultiThreadRorateQpixmap(const OpenCvImgRepr &img,double angle = -90);
 /*
    Functions to convert between OpenCV's cv::Mat and Qt's QImage and QPixmap.
    Andy Maloney
    23 November 2013
    http://asmaloney.com/2013/11/code/converting-between-cvmat-and-qimage-or-qpixmap
  */
- QImage  cvMatToQImage( const cv::Mat &inMat );
- QPixmap cvMatToQPixmap( const cv::Mat &inMat );
+ QImage  algoCvMatToQImage( const cv::Mat &inMat );
+ QPixmap algoCvMatToQPixmap( const cv::Mat &inMat );
 }
 
 #endif // IMG_ALGORITHM_H
