@@ -118,7 +118,6 @@ QPixmap imgznd::DataModel::getMultithreadRoratedQpixmap()
         }
         blockSubmatrixOp (newImgone,img,start,newImgone.rows,sinteta,costeta);
         for (auto &thrd: threads) thrd.join();
-        //std::for_each(threads.begin(),threads.end(),mem_fn(&std::thread::join));
     }
     catch(...)
     {
