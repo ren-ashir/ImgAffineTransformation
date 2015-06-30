@@ -49,9 +49,10 @@ public:
     std::string getPath() const;
     void onLoadButtonClicked();
     QPixmap getStrightforwardQPixmap();
-    QPixmap getOpenCvRotatedQPixmap();
-    QPixmap getOneThreadCpuRotatedQPixmap();
-    QPixmap getMultithreadRoratedQpixmap();
+    QPixmap getOpenCvRotatedQPixmap(double deg);
+    QPixmap getOneThreadCpuRotatedQPixmap(double deg);
+    QPixmap getMultithreadRoratedQpixmap(double deg);
+    QPixmap getCUDARotatedPixmap(double deg);
     double lastOperationTime();
     void saveButtonPushed();
 };

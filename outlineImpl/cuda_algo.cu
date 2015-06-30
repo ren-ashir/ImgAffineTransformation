@@ -2,12 +2,14 @@
 #include <thrust/host_vector.h>
 #include <thrust/device_vector.h>
 #include <thrust/sort.h>
+#include <vector_types.h>
 #include <cuda_runtime.h>
 #include <cuda.h>
 #include <iostream>
 #include <vector>
 #include <ctime>
 #include <cmath>
+
 
 #define PI 3.14159265359
 
@@ -103,7 +105,7 @@ void  transform_xyData_gpu(float *x,float *y,int n)
     delete [] xn;
     delete [] yn;
 }
-extern "C" cudaError_t cuda_main()
+extern "C" cudaError_t algoCuda_main()
 {
     return cudaGetLastError();
 }

@@ -30,15 +30,13 @@ void algoOpenCvResizeBorder(OpenCvImgRepr &src,double dx,double dy);
 void algoOpenCvZoom(OpenCvImgRepr &src,double scale = 1.0);
 
 //cuda's function
-extern "C" cudaError_t cuda_main();
+extern "C" cudaError_t algoCuda_main();
 float* algoCudaGetRow(int row);
 void algoCudaRotate();
 
 //cpu, multithreading
 QPixmap algoOneThreadCpuRotateQPixmap(const OpenCvImgRepr &img,double angle = -90);
 QPixmap algoMultiThreadRorateQpixmap(const OpenCvImgRepr &img,double angle = -90);
-
-
 /*
    Functions to convert between OpenCV's cv::Mat and Qt's QImage and QPixmap.
    Andy Maloney
@@ -51,6 +49,8 @@ QPixmap algoMultiThreadRorateQpixmap(const OpenCvImgRepr &img,double angle = -90
  //math algo
  double algoDeg2Rad(double deg);
 }
+
+
 
 #endif // IMG_ALGORITHM_H
 //backstage code

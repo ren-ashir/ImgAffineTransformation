@@ -30,28 +30,35 @@ void ImgTestGui::on_pushButton_clicked()
 
 void ImgTestGui::on_pushButton_2_clicked()
 { // An OpenCV button
-    setNewPixmapToScene(model.getOpenCvRotatedQPixmap());
+    double angle = ui->lineEdit_deg_5->text().toDouble();
+    setNewPixmapToScene(model.getOpenCvRotatedQPixmap(angle));
     setTimeAndUserStringToLogLine(" msec OpenCV took for the rotate");
 }
 
 void ImgTestGui::on_pushButton_3_clicked()
 { // CUDA rotator
+    double angle = ui->lineEdit_deg_5->text().toDouble();
+    setNewPixmapToScene(model.getCUDARotatedPixmap(angle));
+    setTimeAndUserStringToLogLine(" msec for CUDA required");
 }
 
 void ImgTestGui::on_pushButton_4_clicked()
 { // one CPU thread
-    setNewPixmapToScene(model.getOneThreadCpuRotatedQPixmap());
+    double angle = ui->lineEdit_deg_5->text().toDouble();
+    setNewPixmapToScene(model.getOneThreadCpuRotatedQPixmap(angle));
     setTimeAndUserStringToLogLine(" msec for a one thread CPU required");
 }
 void ImgTestGui::on_pushButton_5_clicked()
 { // multi CPU thread
-    setNewPixmapToScene (model.getMultithreadRoratedQpixmap());
+    double angle = ui->lineEdit_deg_5->text().toDouble();
+    setNewPixmapToScene (model.getMultithreadRoratedQpixmap(angle));
     setTimeAndUserStringToLogLine(" msec a multithrad CPU took for the rotate");
 }
 
 //private
 void ImgTestGui::setNewPixmapToScene(const QPixmap& pix)
-{        
+{
+    ui->lineEdit_path_3->setText(model.getPath().c_str());
     qgpitem = make_unique<QGraphicsPixmapItem>(pix);
     scene = make_unique<QGraphicsScene>();
     scene->addItem(qgpitem.get());
@@ -66,8 +73,8 @@ void ImgTestGui::setTimeAndUserStringToLogLine(const QString &s)
 
 void ImgTestGui::on_pushButton_6_clicked()
 {
-   // model.saveButtonPushed();
-//   QGraphicsPixmapItem TMP;
-//   TMP.pixmap().toImage().save("output.jpg")
+    // model.saveButtonPushed();
+    //   QGraphicsPixmapItem TMP;
+    //   TMP.pixmap().toImage().save("output.jpg")
     qgpitem->pixmap().toImage().save("output.jpg");
 }

@@ -8,7 +8,7 @@
 
 #include <chrono>
 #include "img_datamodel.h"
-
+#include <cuda_runtime.h>
 
 imgznd::DataModel::DataModel() : lastoptime{0.0}
 {
@@ -37,28 +37,46 @@ QPixmap imgznd::DataModel::getStrightforwardQPixmap()
     return imgznd::algoCvMatToQPixmap(img);
 }
 
-QPixmap imgznd::DataModel::getOpenCvRotatedQPixmap()
+QPixmap imgznd::DataModel::getOpenCvRotatedQPixmap(double deg)
 { //  imgznd::algoOpenCvZoom(img,2);
     img.readImage(path);
-    double angle = -38.0;
-    TIMEF(imgznd::algoOpenCvRotate(img,img,angle,1));
+    //double angle = deg;
+    TIMEF(imgznd::algoOpenCvRotate(img,img,-deg,1));
     return imgznd::algoCvMatToQPixmap(img);
 }
 
-QPixmap imgznd::DataModel::getOneThreadCpuRotatedQPixmap()
+QPixmap imgznd::DataModel::getOneThreadCpuRotatedQPixmap(double deg)
 { // todo: add a time RAII class
     img.readImage(path);
-    double angle = 37.0;
+   // double angle = 37.0;
     raiiTimeMeasure tm(lastoptime);
-    return imgznd::algoOneThreadCpuRotateQPixmap(img,angle);
+    return imgznd::algoOneThreadCpuRotateQPixmap(img,deg);
 }
 
-QPixmap imgznd::DataModel::getMultithreadRoratedQpixmap()
+QPixmap imgznd::DataModel::getMultithreadRoratedQpixmap(double deg)
 { // todo: add a time RAII class
     img.readImage(path);
-    double angle = 35.0;
+   // double angle = 35.0;
     raiiTimeMeasure tm(lastoptime);
-    return imgznd::algoMultiThreadRorateQpixmap(img,angle);
+    return imgznd::algoMultiThreadRorateQpixmap(img,deg);
+}
+
+QPixmap imgznd::DataModel::getCUDARotatedPixmap(double deg)
+{
+    raiiTimeMeasure tm(lastoptime);
+    try{
+        qDebug() << "CUDA start\n";
+        cudaError_t cuerr = imgznd::algoCuda_main();
+        if (cuerr != cudaSuccess)
+            qDebug() << "CUDA Error: " << cudaGetErrorString( cuerr ) << endl;
+        qDebug() << "CUDA end\n";
+    }
+    catch(...)
+    {
+        qDebug() << "CUDA error\n";
+    }
+    qDebug() << "CUDA OK";
+    return QPixmap();
 }
 
 double imgznd::DataModel::lastOperationTime()
