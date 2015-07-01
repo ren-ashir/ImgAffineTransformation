@@ -39,41 +39,50 @@ QPixmap imgznd::DataModel::getStrightforwardQPixmap()
 
 QPixmap imgznd::DataModel::getOpenCvRotatedQPixmap(double deg)
 { //  imgznd::algoOpenCvZoom(img,2);
-    img.readImage(path);
+   // img.readImage(path);
     //double angle = deg;
+
+
     TIMEF(imgznd::algoOpenCvRotate(img,img,-deg,1));
     return imgznd::algoCvMatToQPixmap(img);
 }
 
 QPixmap imgznd::DataModel::getOneThreadCpuRotatedQPixmap(double deg)
 { // todo: add a time RAII class
-    img.readImage(path);
-   // double angle = 37.0;
+   // img.readImage(path);
+    // double angle = 37.0;
     raiiTimeMeasure tm(lastoptime);
     return imgznd::algoOneThreadCpuRotateQPixmap(img,deg);
 }
 
 QPixmap imgznd::DataModel::getMultithreadRoratedQpixmap(double deg)
 { // todo: add a time RAII class
-    img.readImage(path);
-   // double angle = 35.0;
+    //img.readImage(path);
+    // double angle = 35.0;
     raiiTimeMeasure tm(lastoptime);
     return imgznd::algoMultiThreadRorateQpixmap(img,deg);
 }
 
 QPixmap imgznd::DataModel::getCUDARotatedPixmap(double deg)
 {
-    raiiTimeMeasure tm(lastoptime);
+    //raiiTimeMeasure tm(lastoptime);
+    //img.readImage(path);
     try{
-        qDebug() << "CUDA start\n";
+        qDebug() << "CUDA start";
+        TIMEF(imgznd::algoCudaRotate(img.data,img.step,img.rows,img.cols,deg));
         cudaError_t cuerr = imgznd::algoCuda_main();
         if (cuerr != cudaSuccess)
-            qDebug() << "CUDA Error: " << cudaGetErrorString( cuerr ) << endl;
-        qDebug() << "CUDA end\n";
+            qDebug() << "CUDA Error: " << cudaGetErrorString(cuerr) << endl;
+        else{
+
+        }
+        qDebug() << "CUDA end";
+        return imgznd::algoCvMatToQPixmap(img);
     }
     catch(...)
     {
-        qDebug() << "CUDA error\n";
+        qDebug() << "Unknown CUDA exception";
+        throw;
     }
     qDebug() << "CUDA OK";
     return QPixmap();

@@ -31,8 +31,7 @@ void algoOpenCvZoom(OpenCvImgRepr &src,double scale = 1.0);
 
 //cuda's function
 extern "C" cudaError_t algoCuda_main();
-float* algoCudaGetRow(int row);
-void algoCudaRotate();
+extern "C" void algoCudaRotate(unsigned char *input_output,int step,int rows,int cols,double angle);
 
 //cpu, multithreading
 QPixmap algoOneThreadCpuRotateQPixmap(const OpenCvImgRepr &img,double angle = -90);
