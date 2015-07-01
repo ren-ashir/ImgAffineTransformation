@@ -11,7 +11,11 @@
 #define IMG_DATAMODEL_H
 
 #include "img_includs.h"
-
+#include "img_representation.h"
+#include "img_provider.h"
+#include "img_algorithm.h"
+#include <chrono>
+#include <QPixmap>
 
 
 namespace imgznd{

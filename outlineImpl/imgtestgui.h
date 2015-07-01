@@ -15,6 +15,7 @@
 #include <memory>
 #include "img_includs.h"
 #include "img_datamodel.h"
+#include "make_unique.h"
 
 
 

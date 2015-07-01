@@ -136,7 +136,7 @@ QPixmap algoMultiThreadRorateQpixmap(const OpenCvImgRepr &img, double angle)
    http://asmaloney.com/2013/11/code/converting-between-cvmat-and-qimage-or-qpixmap
  */
 
-QImage algoCvMatToQImage(const cv::Mat &inMat)
+QImage algoCvMatToQImage(OpenCvImgRepr &inMat)
 {
     switch ( inMat.type() )
     {
@@ -177,7 +177,7 @@ QImage algoCvMatToQImage(const cv::Mat &inMat)
     return QImage();
 }
 
-inline QPixmap algoCvMatToQPixmap(const cv::Mat &inMat)
+QPixmap algoCvMatToQPixmap(OpenCvImgRepr &inMat)
 {
     return QPixmap::fromImage( algoCvMatToQImage( inMat ) );
 }

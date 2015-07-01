@@ -10,6 +10,7 @@
 #include "img_datamodel.h"
 #include <cuda_runtime.h>
 
+
 imgznd::DataModel::DataModel() : lastoptime{0.0}
 {
     path = imgznd::getJpgLink(); // default
