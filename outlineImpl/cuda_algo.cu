@@ -71,7 +71,7 @@ __global__ void kernelRotate(unsigned int* inputMatrix, unsigned int* outputMatr
     int yIndex = blockDim.y * blockIdx.y + threadIdx.y;
 
     if ((xIndex < width) && (yIndex < height))
-    { //http://habrahabr.ru/post/55461/  почему width * yIndex ? Выяснить!
+    {
         //Линейный индекс элемента строки исходной матрицы
         int inputIdx = xIndex + width * yIndex;
         //Линейный индекс элемента столбца матрицы-результата
@@ -149,7 +149,7 @@ extern "C" void algoCudaRotate(unsigned char *input_output,int step,int rows,int
             unsigned char b = input_output[step * i + j],
                     g = input_output[step * i + j + 1],
                     r = input_output[step * i + j + 2];
-            data[i * width + j / channels + j % channels] = (int(b) << 16) | (int(g) << 8) | int(r);
+            data[i * width + j / channels] = (int(b) << 16) | (int(g) << 8) | int(r);
         }
     }
     //std::cerr << "array read\n";
@@ -167,7 +167,7 @@ extern "C" void algoCudaRotate(unsigned char *input_output,int step,int rows,int
    // std::cerr << "returen result to cpu mem\n";
     for(int i = 0;i < height; ++i){ // распаковка
         for(int j = 0;j < width * channels; j += channels){
-            unsigned int bgr = data[i * width + j / channels + j % channels];
+            unsigned int bgr = data[i * width + j / channels];
             input_output[step * i + j] = (bgr >> 16);
             input_output[step * i + j + 1] = (bgr & (255 << 8)) >> 8;
             input_output[step * i + j + 2] = (bgr & 255);

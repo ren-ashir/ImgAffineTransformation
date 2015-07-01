@@ -47,7 +47,7 @@ const ImgPaths &ImgPaths::instance()
 }
 std::string ImgPaths::pathToImgFolder() const
 {
-    return "/home/s/Desktop/";
+    return "/home/s/Desktop/image/";
 }
 
 //private methods

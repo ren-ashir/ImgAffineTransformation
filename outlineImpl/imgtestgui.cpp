@@ -8,13 +8,15 @@
 
 #include "imgtestgui.h"
 #include "ui_imgtestgui.h"
-
-
+#include <QFileInfo>
+#include <QDir>
 ImgTestGui::ImgTestGui(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::ImgTestGui)
 {
     ui->setupUi(this);
+    ui->lineEdit_path_3->setText(model.getPath().c_str());
+    ui->lineEdit_dest_path->setText(QDir::currentPath() + "/out" + ui->lineEdit_path_3->text().split("/").back());
 }
 
 ImgTestGui::~ImgTestGui()
@@ -58,6 +60,7 @@ void ImgTestGui::on_pushButton_5_clicked()
 //private
 void ImgTestGui::setNewPixmapToScene(const QPixmap& pix)
 {
+    qDebug () << model.getPath().c_str();
     ui->lineEdit_path_3->setText(model.getPath().c_str());
     qgpitem = make_unique<QGraphicsPixmapItem>(pix);
     scene = make_unique<QGraphicsScene>();
@@ -76,5 +79,14 @@ void ImgTestGui::on_pushButton_6_clicked()
     // model.saveButtonPushed();
     //   QGraphicsPixmapItem TMP;
     //   TMP.pixmap().toImage().save("output.jpg")
-    qgpitem->pixmap().toImage().save("output.jpg");
+//    QFileInfo file(ui->lineEdit_dest_path->text());
+//    if (file.exists() && file.isDir())
+     qgpitem->pixmap().toImage().save(ui->lineEdit_dest_path->text());
+}
+
+void ImgTestGui::on_lineEdit_path_3_textChanged(const QString &arg1)
+{
+    qDebug () << arg1;
+    model.setPath(ui->lineEdit_path_3->text().toStdString());
+     ui->lineEdit_dest_path->setText(QDir::currentPath() + "/out" + ui->lineEdit_path_3->text().split("/").back());
 }

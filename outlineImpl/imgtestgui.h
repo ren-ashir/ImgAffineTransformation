@@ -44,6 +44,8 @@ private slots:
 
     void on_pushButton_6_clicked();
 
+    void on_lineEdit_path_3_textChanged(const QString &arg1);
+
 private:
     void setTimeAndUserStringToLogLine(const QString &s);
     void setNewPixmapToScene(const QPixmap& pix);

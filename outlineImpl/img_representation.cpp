@@ -7,6 +7,8 @@
 */
 
 #include "img_representation.h"
+#include <QFileInfo>
+
 namespace imgznd
 {
 // public methods
@@ -20,6 +22,10 @@ void OpenCvImgRepr::readImage(const std::string &path)
         qDebug () << "released";
         this->release();
     }
+    QFileInfo checkFile(path.c_str());
+    if (!(checkFile.exists() && checkFile.isFile()))
+        throw std::logic_error ("file doesn't exist");
+
     cv::Mat::operator =(cv::imread(path));// static_cast<cv::Mat&>(*this) = cv::imread(path);
     if (!this->data)
         throw std::bad_alloc{};
