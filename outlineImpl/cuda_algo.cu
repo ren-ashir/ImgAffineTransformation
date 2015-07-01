@@ -131,7 +131,7 @@ __global__ void kernelRotate(unsigned int* inputMatrix, unsigned int* outputMatr
     //    }
 }
 extern "C" void algoCudaRotate(unsigned char *input_output,int step,int rows,int cols,double angle)
-{
+{ // todo: Избавиться от не нужных копирований.
     cudaMemset(&sinteta,0,sizeof(float));
     cudaMemset(&costeta,0,sizeof(float));
     kernelSetsincos<<<1,1>>> (-angle / 180.0 * PI);
